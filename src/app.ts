@@ -1,5 +1,5 @@
 const http = require('http');
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import messagesRoutes from './routes/messages/routes';
 // import peopleRoutes from './routes/people/routes';
 import conversationsRoutes from './routes/conversations/routes';
@@ -7,8 +7,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-import config from './config/configuration';
-import { authenticateUser } from './common/middleware/auth';
 import errorHandler from './common/middleware/error';
 import connectDB from './config/database.config';
 

@@ -1,4 +1,3 @@
-import upload from '../../config/multer';
 import { MessagesController } from '../../controllers/messages.controller';
 import { MessagesService } from '../../services/messages.service';
 

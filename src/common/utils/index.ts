@@ -11,28 +11,6 @@ const errorFormatter = (errors: ValidationError[]) => {
 	});
 };
 
-const validateTemplateData = (data: any[], template: any) => {
-	const templateFields = template.sections.flatMap((section: any) => section.fields);
-	const dataFields = data.map((d) => d.field.toString());
-
-	const missingFields = templateFields.filter((field: any) => !dataFields.includes(field._id?.toString() || ''));
-	return missingFields;
-};
-
-const getFields = (query: any) => {
-	const { fields, expanded }: { fields?: string; expanded?: string } = query;
-	if (!fields) return { fields: '', expanded: expanded?.split(',').join(' ') || '' };
-	const output = fields?.split(',') || [];
-	if (expanded) {
-		const expandedFields = expanded.split(',');
-		for (const expandedField of expandedFields) {
-			output.push(expandedField);
-		}
-	}
-	const outputFields = new Set(output);
-	return { fields: [...outputFields].join(' '), expanded: expanded?.split(',').join(' ') || '' };
-};
-
 const errorBody = (error: any) => {
 	if (error instanceof HttpError)
 		return {
@@ -53,13 +31,5 @@ const ObjectID = (id?: string) => {
 	}
 };
 
-// Generates a select query based on given data and the expand arr
-const generateSelectQuery = (query: string = '*', expand?: string[]) => {
-	if (!expand) return query;
-	let output = query;
-	for (const expandField of expand) {
-		output += `, ${expandField}(*)`;
-	}
-	return output;
-};
-export { errorFormatter, validateTemplateData, getFields, ObjectID, errorBody, generateSelectQuery };
+
+export { errorFormatter, ObjectID, errorBody };

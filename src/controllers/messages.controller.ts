@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { MessagesService } from '../services/messages.service';
 import { BadGatewayResponse, BadRequestResponse, UnauthorizedResponse } from 'http-errors-response-ts/lib';
-import { UserRole } from '../common/enums';
 
 class MessagesController {
 	constructor(private service: MessagesService) { }
