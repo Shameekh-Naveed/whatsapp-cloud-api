@@ -1,0 +1,116 @@
+some sample responses for the webhook
+
+// When I send
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "956009243273149",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "923090786444",
+              "phone_number_id": "641033979090830"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgMOTIzMjE2MjY3NTg0FQIAERgSRjI2OUZCRDg3RjIzOThDN0Yz
+                                                                                zAA==",
+                "status": "sent",
+                "timestamp": "1746141810",
+                "recipient_id": "923216267584",
+                "conversation": {
+                  "id": "465223f3c3bb2a50c44859ab0994a0d8",
+                  "expiration_timestamp": "1746221220",
+                  "origin": {
+                    "type": "marketing"
+                  }
+                },
+                "pricing": {
+                  "billable": true,
+                  "pricing_model": "CBP",
+                  "category": "marketing"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+
+// When message is read
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "956009243273149",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "923090786444",
+              "phone_number_id": "641033979090830"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgMOTIzMjE2MjY3NTg0FQIAERgSRjI2OUZCRDg3RjIzOThDN0Yz
+                                                                                zAA==",
+                "status": "read",
+                "timestamp": "1746141909",
+                "recipient_id": "923216267584"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}
+
+// When I receive
+{
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "956009243273149",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "923090786444",
+              "phone_number_id": "641033979090830"
+            },
+            "contacts": [
+              {
+                "profile": {
+                  "name": "Shameekh Naveed"
+                },
+                "wa_id": "923216267584"
+              }
+            ],
+            "messages": [
+              {
+                "from": "923216267584",
+                "id": "wamid.HBgMOTIzMjE2MjY3NTg0FQIAEhggREI3MDU5M0QyREY1NDFGRDE2OUI3QkQxRUQwRUYyNTEA",
+                "timestamp": "1746141926",
+                "text": {
+                  "body": "Hh"
+                },
+                "type": "text"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

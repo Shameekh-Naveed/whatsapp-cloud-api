@@ -1,0 +1,51 @@
+{
+  "name": "scrolls-backend",
+  "version": "1.1.1",
+  "description": "",
+  "main": "node src/server.ts",
+  "scripts": {
+    "coverage": "nyc --reporter html --reporter text mocha test --recursive",
+    "dev": "ts-node-dev --respawn --transpile-only --exit-child server.ts",
+    "start": "node dist/server.js",
+    "test": "mocha tests --recursive --timeout 15000 --exit",
+    "build": "tsc",
+    "lint": "eslint --fix ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eldimious/nodejs-api-showcase.git"
+  },
+  "author": "Dimos Botsaris <botsaris.d@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eldimious/nodejs-api-showcase/issues"
+  },
+  "homepage": "https://github.com/eldimious/nodejs-api-showcase#readme",
+  "dependencies": {
+    "@dimosbotsaris/express-error-handler": "^1.0.3",
+    "bcrypt": "^5.1.1",
+    "body-parse": "^0.1.0",
+    "class-validator": "^0.14.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.1.0",
+    "express-jwt": "^8.4.1",
+    "express-validator": "^7.1.0",
+    "http-errors-response-ts": "^1.0.0",
+    "mongoose": "^7.8.7",
+    "mongoose-unique-validator": "^4.0.1",
+    "multer": "^1.4.5-lts.1",
+    "scrolls-backend": "file:"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.1",
+    "@types/mongoose": "^5.11.97",
+    "@types/mongoose-unique-validator": "^1.0.9",
+    "@types/node": "^20.16.1",
+    "@types/nodemailer": "^6.4.15",
+    "nodemon": "^3.1.4",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.3"
+  }
+}

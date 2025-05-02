@@ -1,0 +1,68 @@
+import { NextFunction, Request, Response } from 'express';
+import { MessagesService } from '../services/messages.service';
+import { BadGatewayResponse, BadRequestResponse, UnauthorizedResponse } from 'http-errors-response-ts/lib';
+import { UserRole } from '../common/enums';
+
+class MessagesController {
+	constructor(private service: MessagesService) { }
+	verify_token = "Happy123"
+
+
+	async sendMessages(req: Request, res: Response) {
+		const { numbers, message } = req.body;
+
+		if (!numbers || !message)
+			throw new BadRequestResponse('Numbers and message are required');
+
+		// All numbers should start with 92 and have a total of 12 numbers
+		const validNumbers = numbers.filter((number: string) => number.startsWith('92') && number.length === 12);
+		const invalidNumbers = numbers.filter((number: string) => !number.startsWith('92') || number.length !== 12);
+
+		if (validNumbers.length === 0)
+			throw new BadRequestResponse('No valid numbers found');
+		if (validNumbers.length !== numbers.length) {
+			return res.status(400).json({
+				message: 'Some numbers are invalid',
+				invalidNumbers: invalidNumbers
+			});
+		}
+
+		const response = await this.service.sendMessages(validNumbers, message);
+		res.status(200).json(response);
+
+	}
+
+
+	async whatsappWebhook(req: Request, res: Response) {
+		console.log("Incoming webhook message:");
+		try {
+			// Process the webhook payload
+			const result = await this.service.processWebhook(req.body);
+			console.log({ result });
+
+			// Always return 200 OK to WhatsApp to acknowledge receipt
+			return res.status(200).send('Webhook processed successfully');
+		} catch (error) {
+			console.error("Error processing webhook:", error);
+			// Still return 200 to WhatsApp
+			return res.status(200).send('Webhook received with errors');
+		}
+	}
+
+	async verifyWhatsappWebhook(req: Request, res: Response) {
+		const mode = req.query['hub.mode'];
+		const token = req.query['hub.verify_token'];
+		const challenge = req.query['hub.challenge'];
+
+		if (mode && token) {
+			if (mode === 'subscribe' && token === this.verify_token) {
+				console.log('WEBHOOK_VERIFIED');
+				return res.status(200).send(challenge);
+			} else
+				throw new UnauthorizedResponse('Invalid token');
+		} else
+			throw new BadGatewayResponse('Invalid request');
+	}
+}
+
+export { MessagesController };
