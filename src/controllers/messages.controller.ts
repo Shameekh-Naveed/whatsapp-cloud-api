@@ -4,7 +4,7 @@ import { BadGatewayResponse, BadRequestResponse, UnauthorizedResponse } from 'ht
 
 class MessagesController {
 	constructor(private service: MessagesService) { }
-	verify_token = "Happy123"
+	verify_token = process.env.WHATSAPP_VERIFY_TOKEN;
 
 
 	async sendMessages(req: Request, res: Response) {

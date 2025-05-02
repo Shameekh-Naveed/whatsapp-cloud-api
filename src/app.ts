@@ -22,9 +22,14 @@ const init = () => {
 	// Connect to MongoDB
 	connectDB();
 
+
 	app.use('/api/messages', messagesRoutes.init());
 	// app.use('/api/people', peopleRoutes.init());
 	app.use('/api/conversations', conversationsRoutes.init());
+
+	app.get('/', (req, res) => {
+		res.send('API is running...');
+	});
 
 	// @ts-ignore
 	app.use(errorHandler);
