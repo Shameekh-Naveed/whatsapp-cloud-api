@@ -2,15 +2,21 @@ import { Request, Response } from 'express';
 import { MessagesService } from '../services/messages.service';
 import { BadGatewayResponse, BadRequestResponse, UnauthorizedResponse } from 'http-errors-response-ts/lib';
 
+export enum MessageTemplates {
+	DONATION_REMINDER_EN = 'donation_reminder_en',
+	DONATION_REMINDER_UR = 'donation_reminder_ur',
+}
+
 class MessagesController {
 	constructor(private service: MessagesService) { }
 	verify_token = process.env.WHATSAPP_VERIFY_TOKEN;
 
 
 	async sendMessages(req: Request, res: Response) {
-		const { numbers, message } = req.body;
+		const { numbers, template = MessageTemplates.DONATION_REMINDER_EN } = req.body;
 
-		if (!numbers || !message)
+
+		if (!numbers)
 			throw new BadRequestResponse('Numbers and message are required');
 
 		// All numbers should start with 92 and have a total of 12 numbers
@@ -26,7 +32,7 @@ class MessagesController {
 			});
 		}
 
-		const response = await this.service.sendMessages(validNumbers, message);
+		const response = await this.service.sendMessages(validNumbers, template);
 		res.status(200).json(response);
 
 	}

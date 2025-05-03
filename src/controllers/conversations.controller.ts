@@ -10,7 +10,7 @@ class ConversationsController {
         try {
             const filter = req.query.filter ? JSON.parse(String(req.query.filter)) : {};
             const conversations = await this.service.getConversations(filter);
-            res.status(200).json(conversations);
+            res.status(200).json({ conversations });
         } catch (error) {
             next(error);
         }
@@ -66,7 +66,7 @@ class ConversationsController {
             const before = req.query.before ? new Date(String(req.query.before)) : undefined;
 
             const messages = await this.service.getMessages(id, limit, before);
-            res.status(200).json(messages);
+            res.status(200).json({ messages });
         } catch (error) {
             next(error);
         }
@@ -90,7 +90,7 @@ class ConversationsController {
                 mediaUrl
             );
 
-            res.status(201).json(message);
+            res.status(201).json({ message });
         } catch (error) {
             next(error);
         }

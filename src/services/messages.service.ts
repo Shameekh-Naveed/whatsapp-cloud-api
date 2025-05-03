@@ -1,6 +1,7 @@
 import { Person } from '../models/person.model';
 import { ConversationsService } from './conversations.service';
 import { MessageSender, MessageType } from '../models/message.model';
+import { MessageTemplates } from '../controllers/messages.controller';
 
 class MessagesService {
 	private conversationsService: ConversationsService;
@@ -13,14 +14,14 @@ class MessagesService {
 	PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
 	ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
-	async sendMessages(numbers: string[], message: string) {
+	async sendMessages(numbers: string[], template: MessageTemplates) {
 		const failedNumbers: string[] = [];
 		const errors: any[] = [];
 		const successNumbers: string[] = [];
 
 		for (const number of numbers) {
 			try {
-				await this.sendMessage(number, message);
+				await this.sendMessage(number, template);
 				successNumbers.push(number);
 			} catch (error) {
 				failedNumbers.push(number);
@@ -36,7 +37,7 @@ class MessagesService {
 		}
 	}
 
-	async sendMessage(number: string, message: string) {
+	async sendMessage(number: string, template: MessageTemplates) {
 		const url = `${this.WHATSAPP_API_URL}/${this.PHONE_NUMBER_ID}/messages`;
 
 		const response = await fetch(url, {
