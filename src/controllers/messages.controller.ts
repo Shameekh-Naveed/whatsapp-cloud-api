@@ -3,7 +3,7 @@ import { MessagesService } from '../services/messages.service';
 import { BadGatewayResponse, BadRequestResponse, UnauthorizedResponse } from 'http-errors-response-ts/lib';
 
 export enum MessageTemplates {
-	DONATION_REMINDER_EN = 'donation_reminder',
+	DONATION_REMINDER_EN = 'donation_reminder_en',
 	DONATION_REMINDER_UR = 'donation_reminder_ur',
 	NONE = 'none'
 }
