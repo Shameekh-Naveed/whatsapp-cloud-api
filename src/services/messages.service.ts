@@ -3,6 +3,8 @@ import { ConversationsService } from './conversations.service';
 import { MessageSender, MessageType } from '../models/message.model';
 import { MessageTemplates } from '../controllers/messages.controller';
 
+
+
 class MessagesService {
 	private conversationsService: ConversationsService;
 
@@ -14,14 +16,14 @@ class MessagesService {
 	PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
 	ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
-	async sendMessages(numbers: string[], template: MessageTemplates) {
+	async sendMessages(numbers: string[], template: MessageTemplates, message: string) {
 		const failedNumbers: string[] = [];
 		const errors: any[] = [];
 		const successNumbers: string[] = [];
 
 		for (const number of numbers) {
 			try {
-				await this.sendMessage(number, template);
+				await this.sendMessage(number, template, message);
 				successNumbers.push(number);
 			} catch (error) {
 				failedNumbers.push(number);
@@ -37,8 +39,10 @@ class MessagesService {
 		}
 	}
 
-	async sendMessage(number: string, template: MessageTemplates) {
+
+	async sendMessage(number: string, template: MessageTemplates, message: string) {
 		const url = `${this.WHATSAPP_API_URL}/${this.PHONE_NUMBER_ID}/messages`;
+		const requestBody = this.createRequestBody(number, template, message);
 
 		const response = await fetch(url, {
 			method: 'POST',
@@ -46,57 +50,55 @@ class MessagesService {
 				Authorization: `Bearer ${this.ACCESS_TOKEN}`,
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({
-				messaging_product: "whatsapp",
-				to: number,
-				type: "template",
-				template: {
-					name: "donation_reminder",
-					language: {
-						code: "en",
-					},
-				}
-			})
+			body: JSON.stringify(requestBody)
 		});
 
 		const data = await response.json();
 		if (!response.ok) {
-			const error = "Failed to send message to " + number + " Error stringified: " + JSON.stringify(data);
-			throw new Error(error);
+			const errorMessage = `Failed to send message to ${number}. Response: ${JSON.stringify(data)}`;
+			throw new Error(errorMessage);
 		}
 
-		// Try to find a person with this number and update their conversation
+		await this.handleConversationUpdate(number, template, message);
+
+		return data;
+	}
+
+	private async handleConversationUpdate(number: string, template: MessageTemplates, message: string) {
 		try {
-			const person = await Person.findOne({ phoneNumber: number });
-			if (person) {
-				const conversation = await this.conversationsService.findOrCreateConversation(number);
-				await this.conversationsService.addMessage(
-					conversation._id.toString(),
-					MessageSender.SYSTEM,
-					"SYSTEM: donation_reminder template sent successfully"
-				);
-			} else {
-				// Create a new person if not found
-				const newPerson = new Person({
+			let person = await Person.findOne({ phoneNumber: number });
+
+			// If person doesn't exist, create one
+			if (!person) {
+				person = new Person({
 					name: 'Unknown',
 					phoneNumber: number,
 					tags: ['outgoing']
 				});
-				await newPerson.save();
-				const conversation = await this.conversationsService.findOrCreateConversation(number);
-				await this.conversationsService.addMessage(
-					conversation._id.toString(),
-					MessageSender.SYSTEM,
-					"SYSTEM: donation_reminder template sent successfully"
-				);
+				await person.save();
 			}
+
+			const conversation = await this.conversationsService.findOrCreateConversation(number);
+			const systemMessage = this.generateSystemMessage(template, message);
+
+			await this.conversationsService.addMessage(
+				conversation._id.toString(),
+				MessageSender.SYSTEM,
+				systemMessage
+			);
 		} catch (error) {
 			console.error(`Failed to update conversation for ${number}:`, error);
-			// Don't fail the whole operation if conversation update fails
+			// Swallowing the error to avoid breaking message sending
 		}
-
-		return data;
 	}
+
+	private generateSystemMessage(template: MessageTemplates, message: string): string {
+		if (template === MessageTemplates.NONE) {
+			return message;
+		}
+		return `SYSTEM: Template ${template} sent successfully`;
+	}
+
 
 	// Process incoming WhatsApp webhook messages
 	async processWebhook(payload: any) {
@@ -144,6 +146,49 @@ class MessagesService {
 				error: error instanceof Error ? error.message : 'Unknown error'
 			};
 		}
+	}
+
+
+	private createRequestBody(number: string, template: MessageTemplates, message: string) {
+		// For custom message
+		if (template === MessageTemplates.NONE) {
+			return {
+				messaging_product: "whatsapp",
+				recipient_type: "individual",
+				to: number,
+				type: "text",
+				text: {
+					preview_url: false,
+					body: message
+				}
+			};
+		}
+		else if (template === MessageTemplates.DONATION_REMINDER_EN) {
+			return {
+				messaging_product: "whatsapp",
+				to: number,
+				type: "template",
+				template: {
+					name: MessageTemplates.DONATION_REMINDER_EN,
+					language: {
+						code: "en",
+					},
+				}
+			};
+		} else if (template === MessageTemplates.DONATION_REMINDER_UR) {
+			return {
+				messaging_product: "whatsapp",
+				to: number,
+				type: "template",
+				template: {
+					name: MessageTemplates.DONATION_REMINDER_UR,
+					language: {
+						code: "ur",
+					},
+				}
+			};
+		} else
+			throw new Error("Invalid template provided");
 	}
 
 	private async handleIncomingMessage(message: any, contacts: any[]) {

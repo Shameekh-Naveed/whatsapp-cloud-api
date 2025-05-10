@@ -3,8 +3,9 @@ import { MessagesService } from '../services/messages.service';
 import { BadGatewayResponse, BadRequestResponse, UnauthorizedResponse } from 'http-errors-response-ts/lib';
 
 export enum MessageTemplates {
-	DONATION_REMINDER_EN = 'donation_reminder_en',
+	DONATION_REMINDER_EN = 'donation_reminder',
 	DONATION_REMINDER_UR = 'donation_reminder_ur',
+	NONE = 'none'
 }
 
 class MessagesController {
@@ -13,11 +14,20 @@ class MessagesController {
 
 
 	async sendMessages(req: Request, res: Response) {
-		const { numbers, template = MessageTemplates.DONATION_REMINDER_EN } = req.body;
+		const { numbers, template = MessageTemplates.DONATION_REMINDER_EN, message } = req.body;
 
 
 		if (!numbers)
 			throw new BadRequestResponse('Numbers and message are required');
+
+		if (template === MessageTemplates.NONE && !message)
+			throw new BadRequestResponse('Message is required when template is NONE');
+
+		if (template !== MessageTemplates.NONE && message)
+			throw new BadRequestResponse('Message should not be provided when using a template');
+
+		if (template !== MessageTemplates.NONE && !Object.values(MessageTemplates).includes(template))
+			throw new BadRequestResponse('Invalid template provided');
 
 		// All numbers should start with 92 and have a total of 12 numbers
 		const validNumbers = numbers.filter((number: string) => number.startsWith('92') && number.length === 12);
@@ -32,7 +42,7 @@ class MessagesController {
 			});
 		}
 
-		const response = await this.service.sendMessages(validNumbers, template);
+		const response = await this.service.sendMessages(validNumbers, template, message);
 		res.status(200).json(response);
 
 	}
