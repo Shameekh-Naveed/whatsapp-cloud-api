@@ -187,7 +187,21 @@ class MessagesService {
 					},
 				}
 			};
-		} else
+		} else if (template === MessageTemplates.EID_REMINDER_EN) {
+			return {
+				messaging_product: "whatsapp",
+				to: number,
+				type: "template",
+				template: {
+					name: MessageTemplates.EID_REMINDER_EN,
+					language: {
+						code: "en",
+					},
+				}
+			};
+		}
+
+		else
 			throw new Error("Invalid template provided");
 	}
 
