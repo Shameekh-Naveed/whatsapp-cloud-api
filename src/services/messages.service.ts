@@ -199,6 +199,18 @@ class MessagesService {
 					},
 				}
 			};
+		} else if (template === MessageTemplates.DONATION_REMINDER_V2_EN) {
+			return {
+				messaging_product: "whatsapp",
+				to: number,
+				type: "template",
+				template: {
+					name: MessageTemplates.DONATION_REMINDER_V2_EN,
+					language: {
+						code: "en",
+					},
+				}
+			};
 		}
 
 		else
