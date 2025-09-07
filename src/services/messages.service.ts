@@ -223,6 +223,18 @@ class MessagesService {
 					},
 				}
 			};
+		} else if (template === MessageTemplates.FLOOD_DONATION_THANKS) {
+			return {
+				messaging_product: "whatsapp",
+				to: number,
+				type: "template",
+				template: {
+					name: MessageTemplates.FLOOD_DONATION_THANKS,
+					language: {
+						code: "en",
+					},
+				}
+			};
 		}
 
 		else

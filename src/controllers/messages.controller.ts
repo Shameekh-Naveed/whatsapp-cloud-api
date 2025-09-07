@@ -8,6 +8,7 @@ export enum MessageTemplates {
 	EID_REMINDER_EN = 'eid_reminder',
 	DONATION_REMINDER_V2_EN = "donation_reminder_v2_en",
 	FLOOD_DONATION = "flood_donation",
+	FLOOD_DONATION_THANKS = "flood_donation_thanks",
 	NONE = 'none'
 }
 
