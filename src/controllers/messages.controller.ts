@@ -31,6 +31,8 @@ class MessagesController {
     if (!numbers)
       throw new BadRequestResponse("Numbers and message are required");
 
+    // hellos
+
     if (template === MessageTemplates.NONE && !message)
       throw new BadRequestResponse("Message is required when template is NONE");
 
