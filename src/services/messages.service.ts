@@ -263,6 +263,9 @@ class MessagesService {
         type: "template",
         template: {
           name: MessageTemplates.NGO_REGISTERATION,
+          language: {
+            code: "en",
+          },
         },
       };
     } else throw new Error("Invalid template provided");
