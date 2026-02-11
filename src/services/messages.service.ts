@@ -268,6 +268,7 @@ class MessagesService {
           },
         },
       };
+    }
       else if (template === MessageTemplates.RAMDAN_ZAKAT) {
       return {
         messaging_product: "whatsapp",
@@ -353,4 +354,5 @@ class MessagesService {
 }
 
 export { MessagesService };
+
 
