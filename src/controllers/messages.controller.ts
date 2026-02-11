@@ -14,6 +14,7 @@ export enum MessageTemplates {
   FLOOD_DONATION = "flood_donation",
   FLOOD_DONATION_THANKS = "flood_donation_thanks",
   NGO_REGISTERATION = "ngo_registeration",
+  RAMDAN_ZAKAT = "ramdan_zakat",
   NONE = "none",
 }
 
@@ -103,3 +104,4 @@ class MessagesController {
 }
 
 export { MessagesController };
+
