@@ -268,6 +268,18 @@ class MessagesService {
           },
         },
       };
+      else if (template === MessageTemplates.RAMDAN_ZAKAT) {
+      return {
+        messaging_product: "whatsapp",
+        to: number,
+        type: "template",
+        template: {
+          name: MessageTemplates.RAMDAN_ZAKAT,
+          language: {
+            code: "en",
+          },
+        },
+      };
     } else throw new Error("Invalid template provided");
   }
 
@@ -341,3 +353,4 @@ class MessagesService {
 }
 
 export { MessagesService };
+
