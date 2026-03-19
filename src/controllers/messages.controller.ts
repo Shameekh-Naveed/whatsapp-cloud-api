@@ -15,6 +15,7 @@ export enum MessageTemplates {
   FLOOD_DONATION_THANKS = "flood_donation_thanks",
   NGO_REGISTERATION = "ngo_registeration",
   RAMDAN_ZAKAT = "ramdan_zakat",
+  RAMDAN_THANKS = "ramdan_thanks",
   NONE = "none",
 }
 
